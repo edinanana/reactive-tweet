@@ -1,10 +1,12 @@
 package controllers
 
 
+import actors.TwitterStreamer
+import akka.actor.ActorRef
 import core.Env
 import play.api.libs.oauth.{ConsumerKey, OAuthCalculator, RequestToken}
 import play.api.libs.ws.{WS, WSRequest}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, WebSocket}
 
 import scala.concurrent.Future
 import play.api.Play.current
@@ -13,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import core.EnvParserInstance._
 import play.api.Logger
 import play.api.libs.iteratee.{Concurrent, Iteratee}
-import play.api.libs.json.JsObject    // 컴패니언 오브젝트로 이름이 EnvParser 이면 따로 import dksgownjeh ehla
+import play.api.libs.json.{JsObject, JsValue}    // 컴패니언 오브젝트로 이름이 EnvParser 이면 따로 import dksgownjeh ehla
 
 
 /**
@@ -117,5 +119,17 @@ object Application extends Controller {
       case _ => None
     }
     resMatch
+  }
+
+  def tweetHtml = Action {
+    implicit request =>
+      Ok(views.html.index("Tweets"))
+  }
+  def tweets = WebSocket.acceptWithActor[String, JsValue]{
+        // request => actor => prop
+    request => {
+      // actor를 받아서 props 반환
+      (out: ActorRef) => TwitterStreamer.props(out)
+    }
   }
 }
