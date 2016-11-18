@@ -3,6 +3,7 @@ import shapeless.HNil
 /**
   * Created by edinakim on 2016. 10. 20..
   */
+/**
 object generic {
   case class Employee(name:String, number:Int, manager: Boolean)
   case class IceCream(name:String, numCherries:Int, inCone: Boolean)
@@ -17,8 +18,8 @@ object generic {
   val genericEmployee = Generic[Employee].to(Employee("edina", 12, false))
   val genericIceCream = Generic[IceCream].to(IceCream("edinanana", 0, false))
 
-  def genericCsv(gen: String :: Int :: Boolean :: HNil): List[String] =
-    List[String](gen(0), gen(1).toString, if(gen(2)) "true" else "false")
+//  def genericCsv(gen: String :: Int :: Boolean :: HNil): List[String] =
+//    List[String](gen(0), gen(1).toString, true)
 }
 
 // ADT 에서 'and types'는 products = 교집합
@@ -47,3 +48,5 @@ val hlist2 = 10000 :: hlist
 // HList 는 느슨한 타입
 // Generic :: case class     =>     HList      =>
 //          다른 case class 를 => 같은 HList 로 바꿈
+
+**/
